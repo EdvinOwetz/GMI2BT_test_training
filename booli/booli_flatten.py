@@ -2,6 +2,7 @@
 '''booli_flatten.py'''
 
 import json
+from aioitertools import groupby
 import pandas as pd
 # pip install cherrypicker
 from cherrypicker import CherryPicker
@@ -24,27 +25,58 @@ def main():
     df_cherry.to_csv('villa_dalarna_1000.csv', index=False, sep=';')
 
     # --| upg 1 |--
-    df = pd.read_csv('villa_dalarna_1000.csv',sep=";")
+    df = pd.read_csv('villa_dalarna_1000.csv',sep=';')
     print(df)
     print("HEAD", df.head(2))
     print("INFO", df.info())
     
     #print("SUM - ISNULL", df.isnull().sum())
-    #df.dropna(inplace=True)
+    #df.dropna(inplace=True,axis=1)
     print("DROPPED None AND NULL!")
     #new_dataframe=pd.DataFrame()
     #new_dataframe['rooms']=df['rooms']
-    print(df['rooms'])
+    #print(df['rooms'])
     new_dataframe=pd.DataFrame(df[['location_region_municipalityName', 'constructionYear', 'listPrice', 'plotArea', 'livingArea', 'rooms', 'soldDate', 'soldPrice', 'location_position_latitude', 'location_position_longitude']])
 
     print("NEW DATAFRAME", new_dataframe)
+    print(new_dataframe.info())
+    
+    #new_dataframe.dropna(inplace=True)
+    print("The after image? ", new_dataframe)
+    print(new_dataframe.info())
+    
+    print("The mean value? ",new_dataframe.mean())
+    
+    print(new_dataframe["location_region_municipalityName"].unique())
+    
+    print(new_dataframe.fillna(new_dataframe.mean()))
+    
+    län=new_dataframe["location_region_municipalityName"].unique()
+    
+    dataframelista=[]
+    for item in län:
+        tmp_df=new_dataframe.loc[new_dataframe['location_region_municipalityName']==item]
+        #print(tmp_df)
+        #tmp_df.drop('location_region_municipalityName')
+        #print(tmp_df.mean())
+        tmp_df=tmp_df.mean()
+        tmp_df.insert(loc=0,column="ort",value=item)
+        tmp_df["ort"]=item
+        dataframelista.append(tmp_df)
+
+    #print(dataframelista)
+    yetanother_dtaframe=pd.DataFrame(dataframelista)
+    print(yetanother_dtaframe)
+        
+    
+    #print(df)
 # location_address_streetAddress;location_position_latitude;location_position_longitude;location_namedAreas_0;location_region_municipalityName;location_region_countyName;listPrice;livingArea;additionalArea;plotArea;source_name;
 # source_id;source_type;source_url;rooms;published;constructionYear;objectType;booliId;soldDate;soldPrice;soldPriceSource;url;location_address_city;rent;location_position_isApproximate;floor;location_distance_ocean;apartment
 
     # Dubbelkolla NaN
     # Droppa NaN
     # Lägg till kolumn price_m2 (soldPrice/livingArea)
-    # df['soldPrice/livingArea'] = df['soldPrice']/df['livingArea']
+    #df['soldPrice/livingArea'] = df['soldPrice']/df['livingArea']
     # --| upg 2 |--
 
     # group_by() med municipalityName och visualisera medelvärden för hela Dalarna.

@@ -29,12 +29,14 @@ def main():
     print("INFO", df.info())
     
     print("SUM - ISNULL", df.isnull().sum())
-    df.dropna()
+    #df.dropna()
     print("DROPPED None AND NULL!")
-    new_dataframe=pd.DataFrame()
-    new_dataframe=df.groupby(['location_region_municipalityName', 'constructionYear', 'listPrice', 'plotArea', 'livingArea', 'rooms', 'soldDate', 'soldPrice', 'location_position_latitude', 'location_position_longitude'])
+    #new_dataframe=pd.DataFrame()
+    #new_dataframe['rooms']=df['rooms']
+    print(df['rooms'])
+    #new_dataframe=pd.DataFrame(df[['location_region_municipalityName', 'constructionYear', 'listPrice', 'plotArea', 'livingArea', 'rooms', 'soldDate', 'soldPrice', 'location_position_latitude', 'location_position_longitude']])
 
-    print("NEW DATAFRAME", new_dataframe)
+    #print("NEW DATAFRAME", new_dataframe)
 # location_address_streetAddress;location_position_latitude;location_position_longitude;location_namedAreas_0;location_region_municipalityName;location_region_countyName;listPrice;livingArea;additionalArea;plotArea;source_name;
 # source_id;source_type;source_url;rooms;published;constructionYear;objectType;booliId;soldDate;soldPrice;soldPriceSource;url;location_address_city;rent;location_position_isApproximate;floor;location_distance_ocean;apartment
 

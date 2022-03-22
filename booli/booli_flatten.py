@@ -2,10 +2,14 @@
 '''booli_flatten.py'''
 
 import json
-from aioitertools import groupby
+from turtle import showturtle
 import pandas as pd
 # pip install cherrypicker
 from cherrypicker import CherryPicker
+import matplotlib as mlt
+import matplotlib.pyplot as plt
+from scipy.__config__ import show
+import seaborn as sns
 
 #prova att köra!
 
@@ -51,25 +55,43 @@ def main():
     
     print(new_dataframe.fillna(new_dataframe.mean()))
     
-    län=new_dataframe["location_region_municipalityName"].unique()
+    ort=new_dataframe["location_region_municipalityName"].unique()
     
     dataframelista=[]
-    for item in län:
+    for item in ort:
         tmp_df=new_dataframe.loc[new_dataframe['location_region_municipalityName']==item]
-        #print(tmp_df)
-        #tmp_df.drop('location_region_municipalityName')
-        #print(tmp_df.mean())
         tmp_df=tmp_df.mean()
-        tmp_df.insert(loc=0,column="ort",value=item)
-        tmp_df["ort"]=item
         dataframelista.append(tmp_df)
 
-    #print(dataframelista)
-    yetanother_dtaframe=pd.DataFrame(dataframelista)
-    print(yetanother_dtaframe)
-        
+    yetanother_dataframe=pd.DataFrame(dataframelista)
+    print(yetanother_dataframe.columns)
+    yetanother_dataframe.insert(loc=0, column="ort", value=ort)
+    origin_column=list(yetanother_dataframe.columns)
+    column_list=["County", "Year", "List Price", "plotArea", "Area", "Rooms", "Sold Date", "Sold Price", "Latitude", "Longitude"]
+    yetanother_dataframe.rename(columns=dict(zip(origin_column,column_list)),inplace=True)
+    yetanother_dataframe["price_m2"] = yetanother_dataframe["Sold Price"] / yetanother_dataframe["Area"]
     
+    print(yetanother_dataframe)
+    
+    #sns.countplot(new_dataframe["rooms"])
+    #plt.show()
+    sns.countplot(new_dataframe["location_region_municipalityName"])
+    plt.show()
+    
+    sns.boxplot(x=new_dataframe["rooms"],y=new_dataframe["soldPrice"])
+    plt.show()
+    
+    
+    #sns.plot(x=new_dataframe["listPrice"],y=new_dataframe["livingArea"]) 
+    #sns.scatterplot(x=new_dataframe["listPrice"],y=new_dataframe["livingArea"])
+    #sns.lineplot(y=new_dataframe["listPrice"],x=new_dataframe["livingArea"])
+    #plt.show()
+    #yetanother_dataframe.plot.bar(yetanother_dataframe["Rooms"],yetanother_dataframe["Area"])
+    #plt.plot(yetanother_dataframe["Rooms"],yetanother_dataframe["plotArea"])
+    #plt.show()
     #print(df)
+    
+    
 # location_address_streetAddress;location_position_latitude;location_position_longitude;location_namedAreas_0;location_region_municipalityName;location_region_countyName;listPrice;livingArea;additionalArea;plotArea;source_name;
 # source_id;source_type;source_url;rooms;published;constructionYear;objectType;booliId;soldDate;soldPrice;soldPriceSource;url;location_address_city;rent;location_position_isApproximate;floor;location_distance_ocean;apartment
 
